@@ -1,20 +1,36 @@
-# N-of-1 Melatonin Intervention Study
-
-## Project Overview
-This repository contains the data analysis pipeline for an N-of-1 randomized self-experiment. The study is designed to evaluate the causal effect of nightly melatonin supplementation on the subsequent day's mean mood.
-
-* **Investigator:** Miura
-* **Study Design:** N-of-1 Randomized Controlled Trial (RCT)
-* **Duration:** 70 Days
-* **Intervention:** Melatonin (1 = Active, 0 = Control), allocated via a pre-generated randomized JSON schedule.
-
-## Analytical Approach
-To establish strict temporal precedence, the analysis employs a lagged-variable design. The melatonin intervention administered at day $t$ is modeled to predict the daily mean mood at day $t+1$. 
-
-The primary statistical framework is Bayesian regression, implemented via the `brms` package in R. This approach provides robust posterior inference for high-variance, small-sample longitudinal data. An AR(1) autoregressive structure is optionally incorporated to control for temporal mood inertia.
-
-## Execution
-1. Clone this repository to your local machine.
-2. Open `analysis_pipeline.R` in RStudio.
-3. Verify that the following R dependencies are installed: `dplyr`, `ggplot2`, `lubridate`, `brms`.
-4. Execute the script and select the formatted CSV dataset when prompted.
+N-of-1 Melatonin × Mood Study (70-day randomized self-experiment)
+Overview
+This repository contains a reproducible R pipeline for a 70-day N-of-1 randomized self-experiment testing whether nightly melatonin affects next-day mean mood.
+Investigator: Miura
+Design: Randomized N-of-1 (50/50 allocation)
+Day 1 anchor: 2026-02-18
+Condition: melatonin (1 = active, 0 = control) assigned via a pre-generated JSON schedule
+Mood measurement: 0–100 slider, collected ~3×/day (10:00, 16:00, 22:00)
+Data & preprocessing
+Raw mood entries are cleaned and collapsed to one row per day:
+date | morning | afternoon | night | daily_mean | melatonin
+Key cleaning rules:
+Keep observations closest to the target times (~10:00 / ~16:00 / ~22:00)
+Remove duplicate/extra entries from repeated shortcut triggers
+Compute daily_mean = (morning + afternoon + night) / 3
+Temporal alignment (lag)
+To match causal ordering, the model uses:
+Exposure: melatonin taken on night t
+Outcome: mean mood on day t+1
+(Implemented by shifting the mood outcome forward one day relative to the exposure schedule.)
+Models
+Primary model (Bayesian Gaussian regression, brms):
+daily_mean ~ melatonin
+Optional extension:
+AR(1) autocorrelation to account for day-to-day mood inertia
+How to run
+Clone the repository.
+Open analysis_pipeline.R in RStudio.
+Install packages if needed: tidyverse, lubridate, jsonlite, brms
+Run the script. It will prompt you to select the formatted CSV and (if applicable) the JSON schedule.
+Outputs
+The pipeline generates:
+A cleaned daily dataset (1 row/day)
+An intervention time-series plot (colored by condition)
+Posterior summary and posterior plot for the melatonin effect (β)
+Optional boxplot comparing mood distributions by condition
