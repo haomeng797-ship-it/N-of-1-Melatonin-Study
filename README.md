@@ -1,47 +1,83 @@
-# N-of-1 Melatonin × Mood Study (70-day randomized self-experiment)
+# N-of-1 Melatonin × Mood Study
+### 70-day randomized self-experiment | Individual behavioral system analysis
 
-## Overview
-This repository contains a reproducible R pipeline for a 70-day N-of-1 randomized self-experiment testing whether **nightly melatonin** affects **next-day mean mood**.
+---
 
-- **Investigator:** Miura  
-- **Design:** Randomized N-of-1 (50/50 allocation)  
-- **Day 1 anchor:** 2026-02-18  
-- **Condition:** `melatonin` (1 = active, 0 = control) assigned via a pre-generated JSON schedule  
-- **Mood measurement:** 0–100 slider, collected ~3×/day (10:00, 16:00, 22:00)
+## Research Question
 
-## Data & preprocessing
-Raw mood entries are cleaned and collapsed to **one row per day**:
+Does melatonin meaningfully improve momentary emotional valence in a single individual — and relative to what?
 
-`date | morning | afternoon | night | daily_mean | melatonin`
+The study goes beyond a simple intervention test. By simultaneously tracking **agency** and **metacognition** alongside melatonin, it compares the explanatory power of an external intervention against internal behavioral drivers.
 
-Key cleaning rules:
-- Keep observations closest to the target times (~10:00 / ~16:00 / ~22:00)  
-- Remove duplicate/extra entries from repeated shortcut triggers  
-- Compute `daily_mean = (morning + afternoon + night) / 3`
+---
 
-## Temporal alignment (lag)
-To match causal ordering, the model uses:
-- **Exposure:** melatonin taken on **night t**  
-- **Outcome:** mean mood on **day t+1**
+## Design
 
-(Implemented by shifting the mood outcome forward one day relative to the exposure schedule.)
+| Parameter | Value |
+|---|---|
+| Design | N-of-1, A-B randomized |
+| Duration | 70 days (2026-02-18 → 2026-04-29) |
+| Sampling | 3× daily EMA |
+| Primary outcome | Momentary emotional valence (0–100) |
+| Intervention | Melatonin (randomized 50/50 schedule) |
+| Background condition | Hormonal stabilization (continuous, fixed) |
 
-## Models
-Primary model (Bayesian Gaussian regression, `brms`):
-- `daily_mean ~ melatonin`
+---
 
-Optional extension:
-- AR(1) autocorrelation to account for day-to-day mood inertia
+## Variables
 
-## How to run
-1. Clone the repository.
-2. Open `analysis_pipeline.R` in RStudio.
-3. Install packages if needed: `tidyverse`, `lubridate`, `jsonlite`, `brms`
-4. Run the script. It will prompt you to select the formatted CSV and (if applicable) the JSON schedule.
+| Variable | Role |
+|---|---|
+| `mood` | Primary outcome |
+| `melatonin_taken` | Intervention |
+| `agency` | Internal driver — task progress |
+| `metacognition` | Internal driver — state awareness |
 
-## Outputs
-The pipeline generates:
-- A cleaned daily dataset (1 row/day)
-- An intervention time-series plot (colored by condition)
-- Posterior summary and posterior plot for the melatonin effect (β)
-- Optional boxplot comparing mood distributions by condition
+---
+
+## Analytic Models
+
+**1. AR(1) with external inputs**
+```
+mood_t = φ · mood_{t-1} + β₁·melatonin + β₂·agency + β₃·metacognition + ε
+```
+Estimates each variable's contribution above the system's own momentum.
+
+**2. State-Space Model (Kalman Filter)**
+Separates latent affective state from measurement noise. Tracks the true underlying emotional trajectory across 70 days.
+
+**3. Explanatory Power Comparison**
+Incremental R² for each predictor above the AR(1) baseline:
+```
+ΔR²(melatonin) vs. ΔR²(agency) vs. ΔR²(metacognition)
+```
+
+**4. Impulse Response Function**
+How long does a single perturbation persist in the system?
+```
+IRF(h) = φʰ     Half-life = log(0.5) / log(φ)
+```
+
+**5. Metacontrol Interaction**
+Does metacognitive awareness buffer the system against external perturbation?
+```
+mood_t ~ melatonin × metacognition + mood_{t-1}
+```
+
+---
+
+## Repository Structure
+
+```
+N-of-1-Melatonin-Study/
+├── README.md
+├── analysis_pipeline.R        ← primary analysis (R / brms)
+└── analysis/
+    └── miura_analysis.py      ← state-space & IRF pipeline (Python)
+```
+
+Data collection pipeline: [protocol-](https://github.com/haomeng797-ship-it/protocol-)
+
+---
+
+*COMM 8590 | Diversity and the End of Average | 2026*
