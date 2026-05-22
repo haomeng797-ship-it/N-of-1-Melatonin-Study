@@ -14,8 +14,7 @@ antidepressant function.
 **Miura Meng** &nbsp; · &nbsp; meng10@upenn.edu &nbsp; · &nbsp; ORCID: [0009-0004-1522-1997](https://orcid.org/0009-0004-1522-1997)
 
 ## Paper
-
-See [`paper/Miura_Meng_Affect_Paper_v2.docx`](paper/Miura_Meng_Affect_Paper_v2.docx) for the full manuscript.
+See [`paper/`](paper/) for all manuscript versions (latest: v4).
 
 ## Repository structure
 
