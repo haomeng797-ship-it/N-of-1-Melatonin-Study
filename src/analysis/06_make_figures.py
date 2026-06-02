@@ -109,7 +109,7 @@ axes[0].set_ylabel("Score (0–100)")
 fig.suptitle("Active vs. Control Condition Comparison (Day-Level Means)",
              fontsize=12.5, y=1.02)
 plt.tight_layout()
-plt.savefig(FIG_DIR / "fig3_condition_comparison.png", dpi=120, bbox_inches="tight")
+plt.savefig(FIG_DIR / "fig7_condition_comparison.png", dpi=120, bbox_inches="tight")
 plt.close()
 
 # ---- Figure 4: Day-level lag-1 autocorrelation ----
@@ -155,7 +155,7 @@ ax.set_title("Kalman-smoothed latent affective state, 70-day window",
              fontsize=12, loc="left")
 ax.legend(loc="lower right", framealpha=0.9, fontsize=9)
 plt.tight_layout()
-plt.savefig(FIG_DIR / "fig5_kalman_latent_state.png", dpi=120, bbox_inches="tight")
+plt.savefig(FIG_DIR / "fig6_kalman_latent_state.png", dpi=120, bbox_inches="tight")
 plt.close()
 
 # ---- Figure 6: IRF decay ----
@@ -186,7 +186,7 @@ for ax, (h_, irf, p_, half, color, xlbl, hlbl, title) in zip(axes, [
 plt.suptitle("Impulse response and half-life of an affective perturbation",
              fontsize=12, y=1.02)
 plt.tight_layout()
-plt.savefig(FIG_DIR / "fig6_irf_decay.png", dpi=120, bbox_inches="tight")
+plt.savefig(FIG_DIR / "fig5_irf_decay.png", dpi=120, bbox_inches="tight")
 plt.close()
 
 # ---- Figure 7: Incremental R^2 ----
@@ -207,7 +207,7 @@ ax.set_title("Variance in daily mood explained by each predictor,\n"
              "over and above the AR(1) baseline", fontsize=11, loc="left")
 ax.grid(axis="y", alpha=0.25)
 plt.tight_layout()
-plt.savefig(FIG_DIR / "fig7_delta_r2.png", dpi=120, bbox_inches="tight")
+plt.savefig(FIG_DIR / "fig3_delta_r2.png", dpi=120, bbox_inches="tight")
 plt.close()
 
 print(f"All 7 figures saved to {FIG_DIR}/")
