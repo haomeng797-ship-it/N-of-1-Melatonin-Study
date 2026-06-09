@@ -1,126 +1,74 @@
-# N-of-1 Melatonin Study
+# Characterizing Daily Affective Dynamics in a Single Individual
 
-A 70-day single-subject self-experiment testing whether melatonin administration
-predicts daily affective state in one individual, framed within a control-theoretic
-account of affect dynamics. Internal behavioral drivers (perceived agency and
-metacognitive awareness) jointly accounted for **51.5%** of the daily-mood variance
-over and above an AR(1) baseline, while the melatonin probe contributed **0.01%**.
-A heteroskedasticity analysis showed a non-significant trend toward smaller residual
-variance on melatonin days (α₁ = −1.11, *p* = .071), in the direction expected from melatonin's chronobiotic rather than
-antidepressant function.
+*A control-theoretic N-of-1 study with ecological momentary assessment.*
 
-## Author
+A 70-day single-subject self-experiment that tests whether nightly melatonin predicts
+daily affective state, modeling the individual as a dynamical system and treating
+melatonin as a probe of that system rather than as a candidate treatment. Internal
+behavioral drivers — perceived agency and metacognitive awareness — jointly explained
+51.5% of daily-mood variance beyond an AR(1) baseline, whereas the melatonin probe
+added 0.01% and produced only a non-significant trend toward lower day-to-day
+variability (α₁ = −1.11, *p* = .071), consistent with a chronobiotic rather than an
+antidepressant action.
 
-**Miura Meng** &nbsp; · &nbsp; meng10@upenn.edu &nbsp; · &nbsp; ORCID: [0009-0004-1522-1997](https://orcid.org/0009-0004-1522-1997)
+**Author:** Miura Meng · meng10@upenn.edu · ORCID [0009-0004-1522-1997](https://orcid.org/0009-0004-1522-1997)
 
-## Paper
-See [`paper/`](paper/) for all manuscript versions (latest: v8).
+**Keywords:** N-of-1; ecological momentary assessment; dynamical systems; autoregressive
+model; idiographic; personal science; intensive longitudinal data; affect dynamics
 
-## Repository structure
+## Manuscript
 
-```
-N-of-1-Melatonin-Study/
-├── README.md                            ← this file
-├── requirements.txt                     ← Python dependencies
-├── LICENSE                              ← CC-BY 4.0
-├── randomization/
-│   ├── Protocol_.md                     ← data-collection protocol
-│   └── schedule.json                    ← pre-registered 70-day randomization
-├── data/
-│   ├── miura_ema_70day.csv              ← cleaned obs-level EMA data (n = 195)
-│   └── miura_ema_70day_daily.csv        ← cleaned day-level aggregates (n = 70)
-├── src/
-│   ├── data_logger.py                   ← iOS Shortcuts entry validation
-│   └── analysis/
-│       ├── 01_data_prep.py              ← load + verify cleaned dataset
-│       ├── 02_ar1_models.py             ← nested AR(1) M0/M1/M2 + ΔR²
-│       ├── 02b_ar1_obslevel.py          ← obs-level + full-sample AR(1) + half-life
-│       ├── 03_state_space.py            ← local-level Kalman filter
-│       ├── 04_metacontrol.py            ← melatonin × metacog interaction
-│       ├── 05_variability_and_interactions.py    ← variability + agency × mel + state-dependent
-│       ├── 06_make_figures.py           ← regenerate all seven figures
-│       ├── 07_bayesian_robustness.R     ← Bayesian AR(1) robustness, brms (Table 2 / §3.6)
-│       ├── 08_results_table.py          ← assemble outputs/results_table.csv
-│       └── 09_multilevel_robustness.R   ← multilevel mixed-effects model, lme4 (Table 3 / §3.7)
-├── figures/
-│   └── fig1–fig7 (PNGs)
-├── outputs/
-│   ├── clean_obs.csv, clean_day.csv     ← intermediate cleaned frames
-│   ├── ar1_coefficients.csv, ar1_fit_table.csv, delta_r2.csv
-│   ├── phi_halflife.csv
-│   ├── kalman_trajectory.csv, kalman_fit_summary.csv
-│   ├── metacontrol_table.csv, variability_table.csv
-│   └── results_table.csv                ← every number reported in the manuscript (built by 08)
-└── paper/
-    └── Miura_*_Affect_Paper_v2…v8.docx  ← manuscript versions (latest: v8)
-```
+All versions are in [`paper/`](paper/) (latest: v8).
 
-## How to reproduce
+## Repository layout
+
+- `randomization/` — pre-registered 70-day schedule (`schedule.json`) and protocol
+- `data/` — cleaned EMA data: `miura_ema_70day.csv` (observation-level, n = 195) and `miura_ema_70day_daily.csv` (daily, n = 70)
+- `src/data_logger.py` — iOS Shortcuts entry validation
+- `src/analysis/` — analysis scripts `01`–`09` (run order below)
+- `outputs/` — cleaned frames, model tables, and `results_table.csv` (every number reported in the paper)
+- `figures/` — figures 1–7
+- `paper/` — manuscript versions
+
+## Reproducing the analysis
+
+Python 3.10+ (`pip install -r requirements.txt`), run from the repository root:
 
 ```bash
-# 1. Install dependencies (Python 3.10+)
-pip install -r requirements.txt
-
-# 2. Run the analysis pipeline from the repo root, in order
-python src/analysis/01_data_prep.py
-python src/analysis/02_ar1_models.py
-python src/analysis/02b_ar1_obslevel.py
-python src/analysis/03_state_space.py
-python src/analysis/04_metacontrol.py
-python src/analysis/05_variability_and_interactions.py
-
-# 3. Assemble the master results table (reads the CSVs written by 02–05)
-python src/analysis/08_results_table.py
-
-# 4. Regenerate figures
-python src/analysis/06_make_figures.py
+python src/analysis/01_data_prep.py                    # clean and verify the dataset
+python src/analysis/02_ar1_models.py                   # nested AR(1) models + incremental R²
+python src/analysis/02b_ar1_obslevel.py                # observation-level AR(1) + half-life
+python src/analysis/03_state_space.py                  # local-level Kalman filter
+python src/analysis/04_metacontrol.py                  # melatonin × metacognition interaction
+python src/analysis/05_variability_and_interactions.py # variability, interactions, state-dependence
+python src/analysis/08_results_table.py                # assemble results_table.csv
+python src/analysis/06_make_figures.py                 # regenerate figures 1–7
 ```
 
-Supplementary R robustness analyses (require R ≥ 4.1; `brms`/Stan and
-`lme4`/`lmerTest` respectively). Run from the repo root after the Python
-pipeline has written `outputs/clean_*.csv`:
+Two supplementary robustness analyses run in R (≥ 4.1):
 
 ```r
-source("src/analysis/07_bayesian_robustness.R")   # Bayesian M2 -> Table 2 / §3.6
-source("src/analysis/09_multilevel_robustness.R") # mixed-effects -> Table 3 / §3.7
+source("src/analysis/07_bayesian_robustness.R")    # Bayesian M2 (brms)        -> Table 2 / §3.6
+source("src/analysis/09_multilevel_robustness.R")  # mixed-effects (lme4)      -> Table 3 / §3.7
 ```
 
-Each script writes its outputs to `outputs/` (cleaned data, model coefficients,
-fit summaries) and `figures/` (PNG plots). All numbers reported in the
-manuscript can be recovered from the contents of `outputs/`.
+Every number in the manuscript can be recovered from `outputs/`. The fig1–fig4 PNGs are
+the author's polished originals; re-running `06_make_figures.py` reproduces the same
+content in matplotlib with minor stylistic differences.
 
-**Note on fig1–fig4:** the PNGs shipped in `figures/` for fig1–fig4 are the
-author's polished originals. Running `06_make_figures.py` regenerates them
-from the data using `matplotlib` with similar styling; visual rendering may
-differ slightly from the canonical PNGs (the underlying statistical content
-is identical).
+## Method in brief
 
-## Method summary
+A 70-day alternating-treatment design randomized each day to melatonin or control (no
+run longer than two consecutive days). EMA was collected three times daily (~10:00,
+16:00, 22:00) via iOS Shortcuts: mood, agency, and metacognition on 0–100 sliders plus
+a melatonin indicator. Agency and metacognition were added on Day 18, so analyses using
+them cover Days 18–70. The final sample is 195 observations across 70 study days (92.9%
+compliance), with 35 control and 35 melatonin days.
 
-- **Design.** 70-day intensive longitudinal N-of-1 alternating-treatment study.
-  Each day randomly assigned to active (melatonin) or control (no melatonin)
-  according to a pre-registered schedule with no runs longer than two consecutive
-  days in either condition.
-- **Measures.** Ecological momentary assessment (EMA) three times per day
-  (~10:00, ~16:00, ~22:00) via automated iOS Shortcuts. Items:
-  *mood* (current emotional state, 0–100 slider), *agency* (sense of task
-  progress and forward motion, 0–100 slider), *metacognition* (awareness of
-  current internal state, 0–100 slider), *melatonin* taken last night (0/1).
-- **Day-18 protocol amendment.** Agency and metacognition items were added on
-  Day 18 (2026-03-07) after an interim review; analyses involving these
-  variables are restricted to Days 18–70.
-- **Sample.** 195 EMA observations across 70 study days (92.9% compliance);
-  35 control and 35 melatonin daily aggregates across 70 study days, with one study
-  day spanning two calendar dates aggregated to a single observation under the protocol's evening-start convention.
+## Availability and citation
 
-## Data and code availability
+Released under [CC-BY 4.0](LICENSE).
 
-Data and code in this repository are released under [CC-BY 4.0](LICENSE).
-
-## Citation
-
-If you use this code or dataset, please cite the manuscript:
-
-> Meng, M. (2026). *Affect as a Dynamical System: A Control-Theoretic N-of-1
-> Self-Experiment*. Manuscript in preparation.
-> https://github.com/haomeng797-ship-it/N-of-1-Melatonin-Study
+> Meng, M. (2026). *Characterizing daily affective dynamics in a single individual:
+> A control-theoretic N-of-1 study with ecological momentary assessment.* Manuscript in
+> preparation. https://github.com/haomeng797-ship-it/N-of-1-Melatonin-Study
