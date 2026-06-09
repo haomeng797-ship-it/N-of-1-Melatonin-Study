@@ -39,8 +39,9 @@ N-of-1-Melatonin-Study/
 │       ├── 04_metacontrol.py            ← melatonin × metacog interaction
 │       ├── 05_variability_and_interactions.py    ← variability + agency × mel + state-dependent
 │       ├── 06_make_figures.py           ← regenerate all seven figures
-│       ├── 07_bayesian_robustness.R     ← supplementary Bayesian AR(1) robustness (brms)
-│       └── 08_results_table.py          ← assemble outputs/results_table.csv
+│       ├── 07_bayesian_robustness.R     ← Bayesian AR(1) robustness, brms (Table 2 / §3.6)
+│       ├── 08_results_table.py          ← assemble outputs/results_table.csv
+│       └── 09_multilevel_robustness.R   ← multilevel mixed-effects model, lme4 (Table 3 / §3.7)
 ├── figures/
 │   └── fig1–fig7 (PNGs)
 ├── outputs/
@@ -73,6 +74,15 @@ python src/analysis/08_results_table.py
 
 # 4. Regenerate figures
 python src/analysis/06_make_figures.py
+```
+
+Supplementary R robustness analyses (require R ≥ 4.1; `brms`/Stan and
+`lme4`/`lmerTest` respectively). Run from the repo root after the Python
+pipeline has written `outputs/clean_*.csv`:
+
+```r
+source("src/analysis/07_bayesian_robustness.R")   # Bayesian M2 -> Table 2 / §3.6
+source("src/analysis/09_multilevel_robustness.R") # mixed-effects -> Table 3 / §3.7
 ```
 
 Each script writes its outputs to `outputs/` (cleaned data, model coefficients,

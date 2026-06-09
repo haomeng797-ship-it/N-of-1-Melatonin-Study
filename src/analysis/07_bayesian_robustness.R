@@ -111,8 +111,39 @@ print(summ_meta, n = Inf)
 write.csv(summ_meta, "outputs/bayesian_metacontrol_posterior_summary.csv", row.names = FALSE)
 saveRDS(fit_meta, "outputs/bayesian_metacontrol_fit.rds")
 
+# ---------- Table-ready summaries (map directly to manuscript Table 2 / Sec 3.6) ----------
+fmt_ci <- function(lo, hi) sprintf("[%.2f, %.2f]", lo, hi)
+
+# Table 2: primary Bayesian M2
+m2_map <- c(b_Intercept = "Intercept", b_lag_mood_z = "mood_t-1 (z)",
+            b_melatonin = "melatonin", b_agency_z = "agency (z)",
+            b_metacognition_z = "metacognition (z)", sigma = "sigma")
+tt <- summ_m2[match(names(m2_map), summ_m2$variable), ]
+m2_table <- data.frame(
+  Term        = unname(m2_map),
+  Posterior_M = round(tt$mean, 2),
+  CrI_95      = fmt_ci(tt$`2.5%`, tt$`97.5%`),
+  Pr_gt_0     = round(tt$pr_gt_0, 3),
+  Rhat        = round(tt$rhat, 3),
+  ESS_bulk    = round(tt$ess_bulk)
+)
+write.csv(m2_table, "outputs/bayesian_m2_table.csv", row.names = FALSE)
+cat("\n=== Table 2 (paste into manuscript) ===\n"); print(m2_table)
+
+# Sec 3.6 secondary: melatonin x metacognition interaction
+int_var <- grep("^b_melatonin.*metacognition_z$", summ_meta$variable, value = TRUE)
+if (length(int_var) == 1) {
+  r <- summ_meta[summ_meta$variable == int_var, ]
+  cat(sprintf("\nMetacontrol interaction (Sec 3.6): beta = %.2f, 95%% CrI %s, Pr(beta<0) = %.2f\n",
+              r$mean, fmt_ci(r$`2.5%`, r$`97.5%`), 1 - r$pr_gt_0))
+}
+
+# Reproducibility log
+writeLines(capture.output(sessionInfo()), "outputs/bayesian_sessionInfo.txt")
+
 cat("\nDone. Output files written to outputs/:\n")
 cat("  bayesian_m2_posterior_summary.csv\n")
+cat("  bayesian_m2_table.csv              <- paste straight into Table 2\n")
 cat("  bayesian_metacontrol_posterior_summary.csv\n")
-cat("  bayesian_m2_fit.rds\n")
-cat("  bayesian_metacontrol_fit.rds\n")
+cat("  bayesian_m2_fit.rds / bayesian_metacontrol_fit.rds\n")
+cat("  bayesian_sessionInfo.txt\n")
