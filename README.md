@@ -5,11 +5,10 @@
 A 70-day single-subject self-experiment that tests whether nightly melatonin predicts
 daily affective state, modeling the individual as a dynamical system and treating
 melatonin as a probe of that system rather than as a candidate treatment. Internal
-behavioral drivers — perceived agency and metacognitive awareness — jointly explained
+behavioral drivers (perceived agency and metacognitive awareness) jointly explained
 51.5% of daily-mood variance beyond an AR(1) baseline, whereas the melatonin probe
 added 0.01% and produced only a non-significant trend toward lower day-to-day
-variability (α₁ = −1.11, *p* = .071), consistent with a chronobiotic rather than an
-antidepressant action.
+variability (α₁ = −1.11, *p* = .071), pointing to a stabilizing rather than a mood-lifting effect.
 
 **Author:** Miura Meng · meng10@upenn.edu · ORCID [0009-0004-1522-1997](https://orcid.org/0009-0004-1522-1997)
 
@@ -22,13 +21,13 @@ All versions are in [`paper/`](paper/) (latest: v8).
 
 ## Repository layout
 
-- `randomization/` — pre-registered 70-day schedule (`schedule.json`) and protocol
-- `data/` — cleaned EMA data: `miura_ema_70day.csv` (observation-level, n = 195) and `miura_ema_70day_daily.csv` (daily, n = 70)
-- `src/data_logger.py` — iOS Shortcuts entry validation
-- `src/analysis/` — analysis scripts `01`–`09` (run order below)
-- `outputs/` — cleaned frames, model tables, and `results_table.csv` (every number reported in the paper)
-- `figures/` — figures 1–7
-- `paper/` — manuscript versions
+- `randomization/`: pre-registered 70-day schedule (`schedule.json`) and protocol
+- `data/`: cleaned EMA, observation-level (`miura_ema_70day.csv`, n = 195) and daily (`miura_ema_70day_daily.csv`, n = 70)
+- `src/data_logger.py`: iOS Shortcuts entry validation
+- `src/analysis/`: analysis scripts `01`–`09` (run order below)
+- `outputs/`: cleaned frames, model tables, and `results_table.csv` (every number reported in the paper)
+- `figures/`: figures 1–7
+- `paper/`: manuscript versions
 
 ## Reproducing the analysis
 
