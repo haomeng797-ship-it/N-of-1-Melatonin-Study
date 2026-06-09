@@ -3,10 +3,10 @@
 A 70-day single-subject self-experiment testing whether melatonin administration
 predicts daily affective state in one individual, framed within a control-theoretic
 account of affect dynamics. Internal behavioral drivers (perceived agency and
-metacognitive awareness) jointly accounted for **51.6%** of the daily-mood variance
+metacognitive awareness) jointly accounted for **51.5%** of the daily-mood variance
 over and above an AR(1) baseline, while the melatonin probe contributed **0.01%**.
-A heteroskedasticity analysis suggested smaller residual variance on melatonin days
-(α₁ = −1.21, *p* = .044), consistent with melatonin's chronobiotic rather than
+A heteroskedasticity analysis showed a non-significant trend toward smaller residual
+variance on melatonin days (α₁ = −1.11, *p* = .071), in the direction expected from melatonin's chronobiotic rather than
 antidepressant function.
 
 ## Author
@@ -52,7 +52,7 @@ N-of-1-Melatonin-Study/
 │   ├── metacontrol_table.csv, variability_table.csv
 │   └── results_table.csv                ← every number reported in the manuscript (built by 08)
 └── paper/
-    └── Miura_*_Affect_Paper_v2…v4.docx  ← manuscript versions (latest: v4)
+    └── Miura_*_Affect_Paper_v2…v8.docx  ← manuscript versions (latest: v8)
 ```
 
 ## How to reproduce
@@ -110,8 +110,8 @@ is identical).
   Day 18 (2026-03-07) after an interim review; analyses involving these
   variables are restricted to Days 18–70.
 - **Sample.** 195 EMA observations across 70 study days (92.9% compliance);
-  35 control and 36 melatonin daily aggregates, partitioned across 71 calendar
-  dates due to the protocol's evening-start convention.
+  35 control and 35 melatonin daily aggregates across 70 study days, with one study
+  day spanning two calendar dates aggregated to a single observation under the protocol's evening-start convention.
 
 ## Data and code availability
 
