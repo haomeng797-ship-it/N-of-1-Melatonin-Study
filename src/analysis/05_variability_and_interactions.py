@@ -99,3 +99,34 @@ print(f"phi (melatonin) = {phi_mel:.3f}")
 print(f"interaction beta = {m_sd.params['lag1_x_mel']:.3f}, 95% CI "
       f"[{ci2.loc['lag1_x_mel',0]:.3f}, {ci2.loc['lag1_x_mel',1]:.3f}], "
       f"p = {m_sd.pvalues['lag1_x_mel']:.3f}")
+
+# ---- Persist the headline numbers so they are reproducible from outputs/ ----
+rows = [
+    ("var.day_sd_control",        ctrl_day.std(),                      "Day-level SD of daily mood (control)"),
+    ("var.day_sd_melatonin",      mel_day.std(),                       "Day-level SD of daily mood (melatonin)"),
+    ("var.day_levene_W",          lev_W,                               "Day-level Brown-Forsythe Levene W"),
+    ("var.day_levene_p",          lev_p,                               "Day-level Brown-Forsythe Levene p"),
+    ("var.obs_sd_control",        ctrl_obs.std(),                      "Obs-level SD of mood (control)"),
+    ("var.obs_sd_melatonin",      mel_obs.std(),                       "Obs-level SD of mood (melatonin)"),
+    ("var.obs_levene_W",          lev2_W,                              "Obs-level Brown-Forsythe Levene W"),
+    ("var.obs_levene_p",          lev2_p,                              "Obs-level Brown-Forsythe Levene p"),
+    ("var.mssd_control_mean",     float(np.mean(ctrl_runs)),           "Mean MSSD across control runs"),
+    ("var.mssd_melatonin_mean",   float(np.mean(mel_runs)),            "Mean MSSD across melatonin runs"),
+    ("var.mssd_welch_t",          mssd_t,                              "Welch t for MSSD (mel vs control)"),
+    ("var.mssd_welch_p",          mssd_p,                              "Welch p for MSSD"),
+    ("var.het_alpha1",            het.params["melatonin"],             "Log-variance regression: melatonin coef"),
+    ("var.het_alpha1_ci_lo",      het.conf_int().loc["melatonin", 0],  "95% CI lower for log-variance coef"),
+    ("var.het_alpha1_ci_hi",      het.conf_int().loc["melatonin", 1],  "95% CI upper for log-variance coef"),
+    ("var.het_alpha1_p",          het.pvalues["melatonin"],            "p for log-variance coef"),
+    ("interaction.ag_x_mel.beta", m_int.params["ag_x_mel"],            "agency_centered x melatonin interaction beta"),
+    ("interaction.ag_x_mel.ci_lo", ci.loc["ag_x_mel", 0],              "95% CI lower for agency x mel interaction"),
+    ("interaction.ag_x_mel.ci_hi", ci.loc["ag_x_mel", 1],              "95% CI upper for agency x mel interaction"),
+    ("interaction.ag_x_mel.p",    m_int.pvalues["ag_x_mel"],           "p for agency x mel interaction"),
+    ("statedep.phi_control",      phi_ctrl,                            "AR(1) phi for control days"),
+    ("statedep.phi_melatonin",    phi_mel,                             "AR(1) phi for melatonin days"),
+    ("statedep.lag_x_mel.beta",   m_sd.params["lag1_x_mel"],           "lag1 x melatonin interaction beta"),
+    ("statedep.lag_x_mel.p",      m_sd.pvalues["lag1_x_mel"],          "p for lag1 x mel interaction"),
+]
+pd.DataFrame(rows, columns=["key", "value", "description"]).to_csv(
+    OUT_DIR / "variability_table.csv", index=False)
+print(f"\nSaved variability/interaction results to {OUT_DIR / 'variability_table.csv'}")

@@ -27,9 +27,8 @@ N-of-1-Melatonin-Study/
 │   ├── Protocol_.md                     ← data-collection protocol
 │   └── schedule.json                    ← pre-registered 70-day randomization
 ├── data/
-│   ├── Miura_Data.csv                   ← original 44-day course-project export
 │   ├── miura_ema_70day.csv              ← cleaned obs-level EMA data (n = 195)
-│   └── miura_ema_70day_daily.csv        ← cleaned day-level aggregates (n = 71)
+│   └── miura_ema_70day_daily.csv        ← cleaned day-level aggregates (n = 70)
 ├── src/
 │   ├── data_logger.py                   ← iOS Shortcuts entry validation
 │   └── analysis/
@@ -39,7 +38,9 @@ N-of-1-Melatonin-Study/
 │       ├── 03_state_space.py            ← local-level Kalman filter
 │       ├── 04_metacontrol.py            ← melatonin × metacog interaction
 │       ├── 05_variability_and_interactions.py    ← variability + agency × mel + state-dependent
-│       └── 06_make_figures.py           ← regenerate all seven figures
+│       ├── 06_make_figures.py           ← regenerate all seven figures
+│       ├── 07_bayesian_robustness.R     ← supplementary Bayesian AR(1) robustness (brms)
+│       └── 08_results_table.py          ← assemble outputs/results_table.csv
 ├── figures/
 │   └── fig1–fig7 (PNGs)
 ├── outputs/
@@ -47,10 +48,10 @@ N-of-1-Melatonin-Study/
 │   ├── ar1_coefficients.csv, ar1_fit_table.csv, delta_r2.csv
 │   ├── phi_halflife.csv
 │   ├── kalman_trajectory.csv, kalman_fit_summary.csv
-│   ├── metacontrol_table.csv
-│   └── results_table.csv                ← every number reported in the manuscript
+│   ├── metacontrol_table.csv, variability_table.csv
+│   └── results_table.csv                ← every number reported in the manuscript (built by 08)
 └── paper/
-    └── Miura_Meng_Affect_Paper_v2.docx
+    └── Miura_*_Affect_Paper_v2…v4.docx  ← manuscript versions (latest: v4)
 ```
 
 ## How to reproduce
@@ -67,7 +68,10 @@ python src/analysis/03_state_space.py
 python src/analysis/04_metacontrol.py
 python src/analysis/05_variability_and_interactions.py
 
-# 3. Regenerate figures
+# 3. Assemble the master results table (reads the CSVs written by 02–05)
+python src/analysis/08_results_table.py
+
+# 4. Regenerate figures
 python src/analysis/06_make_figures.py
 ```
 
